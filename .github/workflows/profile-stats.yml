@@ -1,0 +1,52 @@
+name: Generate Profile Visuals
+
+on:
+  schedule:
+    - cron: "0 0 * * *" # Runs daily at midnight UTC
+  workflow_dispatch:     # Allows manual trigger
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-generate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 1. Generate 3D Contribution Calendar
+      - name: Generate 3D Contribution Grid
+        uses: yoshi389111/github-profile-3d-contrib@0.7.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          USERNAME: ${{ github.repository_owner }}
+
+      # 2. Commit 3D SVGs to main branch
+      - name: Commit 3D Profile SVGs
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A profile-3d-contrib/
+          git commit -m "chore: update 3D contribution grid [skip ci]" || exit 0
+          git push
+
+      # 3. Generate Snake Animation SVGs
+      - name: Generate Snake SVGs
+        uses: Platane/snk/svg-only@v3
+        with:
+          github_user_name: ${{ github.repository_owner }}
+          outputs: |
+            dist/github-contribution-grid-snake.svg
+            dist/github-contribution-grid-snake-dark.svg?palette=github-dark
+
+      # 4. Deploy Snake SVGs to 'output' branch
+      - name: Push Snake to output branch
+        uses: crazy-max/ghaction-github-pages@v3.1.0
+        with:
+          target_branch: output
+          build_dir: dist
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
