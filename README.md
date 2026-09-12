@@ -1,6 +1,6 @@
 <div align="center">
   <h1>Hi there, I'm Jisha Salariya 👋</h1>
-  <p><strong>Computer Science & IT Enthusiast | Deep Learning & Satellite Analytics | Full-Stack Builder</strong></p>
+  <p><strong>Computer Science & IT Enthusiast | Machine Learning & Deep Learning | Cybersecurity | Full-Stack Builder</strong></p>
 
   <p>
     <a href="mailto:jsalariya2008@gmail.com"><img src="https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white" alt="Email" /></a>
